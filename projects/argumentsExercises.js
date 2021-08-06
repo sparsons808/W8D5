@@ -49,22 +49,22 @@ Function.prototype.myBind2 = function (context, ...args) {
 
 
 
-class Cat {
-    constructor(name) {
-      this.name = name;
-    }
+// class Cat {
+//     constructor(name) {
+//       this.name = name;
+//     }
   
-    says(sound, person) {
-      console.log(`${this.name} says ${sound} to ${person}!`);
-      return true;
-    }
-  }
+//     says(sound, person) {
+//       console.log(`${this.name} says ${sound} to ${person}!`);
+//       return true;
+//     }
+//   }
   
-  class Dog {
-    constructor(name) {
-      this.name = name;
-    }
-  }
+//   class Dog {
+//     constructor(name) {
+//       this.name = name;
+//     }
+//   }
   
 //   const markov = new Cat("Markov");
 //   const pavlov = new Dog("Pavlov");
@@ -92,18 +92,67 @@ class Cat {
 //   const notMarkovSays = markov.says.myBind2(pavlov);
 // //   notMarkovSays("meow", "me");
 
-function curriedSum(numArgs) {
-      const numbers = [];
-      return function _curriedSum(num) {
-            numbers.push(num);
-            if (numbers.length === numArgs) {
-                  numbers.reduce((acc, el) => acc + el);
-                  return acc;
-            } else {
-                  return _curriedSum;
-            }
-      }; 
+// function curriedSum(numArgs) {
+//       const numbers = [];
+//       return function _curriedSum(num) {
+//             numbers.push(num);
+//             if (numbers.length === numArgs) {
+//                 return numbers.reduce((acc, el) => acc + el);
+//             } else {
+//                   return _curriedSum;
+//             }
+//       }; 
+// }
+
+// const sum = curriedSum(4);
+// console.log(sum(5)(30)(20)(1));
+
+
+// Function.prototype.curry = function (numArgs) {
+//     let arr = []
+//     let that = this
+//     // debugger
+//     return function _curried(arg) {
+//         // debugger
+//         arr.push(arg);
+//         if ( arr.length === numArgs ) {
+//             return that.apply(null, arr);
+//             // debugger
+//         } else {
+//             return _curried;
+//         }
+//     }
+// }
+
+Function.prototype.curry = function (numArgs) {
+    let arr = []
+    let that = this
+    // debugger
+    return function _curried(arg) {
+        // debugger
+        arr.push(arg);
+        if ( arr.length === numArgs ) {
+            console.log(this);
+            return that.call(null, ...arr);
+            // debugger
+        } else {
+            return _curried;
+        }
+    }
 }
 
-const sum = curriedSum(4);
-sum(5)(30)(20)(1);
+
+function sumThree(num1, num2, num3) {
+    return num1 + num2 + num3;
+  }
+  
+  sumThree(4, 20, 6); // == 30
+  
+  // you'll write `Function#curry`!
+  let f1 = sumThree.curry(3); // tells `f1` to wait until 3 arguments are given before running `sumThree`
+  f1 = f1(4); // [Function]
+  f1 = f1(20); // [Function]
+  f1 = f1(6); // = 30
+  
+  // or more briefly:
+  console.log(sumThree.curry(3)(4)(20)(6)); // == 30
